@@ -164,7 +164,7 @@ def process_data(df: pd.DataFrame, xmin: int=-50, xmax: int=1000):
         return None, None
 
 
-def process_gene_data(df: pd.DataFrame, result_dict: dict, 
+def process_gene_data(df: pd.DataFrame, fit_results: dict, 
         xmin: int=-50, xmax: int=1000):
     """
     Process the DataFrame for phasing analysis
@@ -174,7 +174,7 @@ def process_gene_data(df: pd.DataFrame, result_dict: dict,
     df : pandas.DataFrame
         Input dataframe containing methylation data
         Must have columns: 'Gene', 'Pos', 'Value'
-    result_dict:
+    fit_results:
         Fitting result from phasing analysis
     xmin : int
         Minimum x value to include in analysis
@@ -183,10 +183,10 @@ def process_gene_data(df: pd.DataFrame, result_dict: dict,
         
     Returns:
     --------
-    tuple
-        (processed_dataframe, result_dictionary)
+    gene_pd: pandas.DataFrame
+        Output dataframe with columns: 'Gene', 'Adj.Average'
     """
-    fit_params = result_dict['fit_params']
+    fit_params = fit_results['results']['fit_params']
     # Ensure required columns exist
     required_columns = ['Gene', 'Pos', 'Value']
     if not all(col in df.columns for col in required_columns):

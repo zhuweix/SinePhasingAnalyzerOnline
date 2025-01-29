@@ -53,7 +53,7 @@ def plot_settings_sidebar():
     
     return plot_params
 
-def create_visualization(df, result_dict, gene, adj_value, plot_params):
+def create_visualization(df, fit_results, gene, adj_value, plot_params):
     """
     Create visualization for phasing analysis data
     """
@@ -66,12 +66,12 @@ def create_visualization(df, result_dict, gene, adj_value, plot_params):
     # Create scatter plot of data points
     g = sns.scatterplot(x=xpos, y=y, s=3, label='Data', ax=ax)
     
-    if result_dict is not None:
+    if fit_results is not None:
         # Generate fitting curve points
         x_fit = np.linspace(plot_params['xlim'][0], plot_params['xlim'][1], 1000)
         
         # Get fit parameters
-        popt = result_dict['fit_params']
+        popt = fit_results['results']['fit_params']
         A_fit, l_fit, w_0_fit, theta0_fit, b_fit, s_fit = popt
         
         # Plot fitted sine wave
