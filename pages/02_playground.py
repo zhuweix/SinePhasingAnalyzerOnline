@@ -107,7 +107,7 @@ def plot_curves(params, plot_params):
     bright = x_high * params['s'] + params['b']  
 
     # Plot curves
-    g = sns.lineplot(x=x, y=y_fit, label='Fitted', ax=g, color='red', lw=1, ax=ax)    
+    g = sns.lineplot(x=x, y=y_fit, label='Fitted', color='red', lw=1, ax=ax)    
     g = sns.lineplot(x=(x_low, x_high), y=(bleft, bright), lw=2, ls='--', color='.3', ax=g)
     g = sns.lineplot(x=x, y=y_high, lw=2, ls='--', color='0.5', ax=g,)
     g = sns.lineplot(x=x, y=y_low, lw=2, ls='--', color='0.5', ax=g,)
