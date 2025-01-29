@@ -146,7 +146,7 @@ def main():
             adj_value = gene_dict.get(target_gene, None)
             if adj_value is None:
                 st.error(f"{target_gene} is not Found in the provided table")
-            target_df = gene_df.loc[gene_df['Gene'] == target_gene]
+            target_df = df.loc[df['Gene'] == target_gene]
             fig = create_visualization(target_df, phasing_results, target_gene, adj_value, plot_params)
             st.pyplot(fig)
     
