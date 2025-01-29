@@ -40,7 +40,7 @@ def plot_settings_sidebar():
         pos_max = st.number_input("Pos Min", value=defaults['location_range'][1])
         xlim_max = st.number_input("X Max", value=defaults['xlim'][1])
         ylim_max = st.number_input("Y Max", value=defaults['ylim'][1])
-        xtick_max = st.number_input("X tick Min", value=defaults['xticks_popt'][1])        
+        xtick_max = st.number_input("X tick Max", value=defaults['xticks_popt'][1])        
     # Combine all parameters
     plot_params = {
         'title': title,
@@ -100,7 +100,7 @@ def create_visualization(df, result_dict, plot_params):
           yticks=plot_params['yticks'],
           title=plot_params['title'])
     g.legend(markerscale=2)
-    return fig, g
+    return fig
 
 def save_figure_to_bytes(fig, format='png', dpi=300):
     """Save matplotlib figure to bytes in specified format"""
@@ -204,7 +204,7 @@ def main():
             display_fit_results(result_dict)
             
             # Create visualization
-            fig, ax = create_visualization(processed_df, result_dict, plot_params)
+            fig = create_visualization(processed_df, result_dict, plot_params)
             
             # Show plot
             st.subheader("Phasing Analysis Plot")

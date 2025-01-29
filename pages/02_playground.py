@@ -22,7 +22,7 @@ def create_parameter_controls(result_dict=None):
         theta0 = st.number_input('theta0', value=-1.57)
         params = {
             'A': amp,
-            'l': -np.log(d) / spacing,
+            'l': -np.log(decay) / spacing,
             'w_0': w,
             'theta_0': theta0,
             'b': b,
@@ -75,7 +75,7 @@ def plot_settings_sidebar():
     with col2:
         xlim_max = st.number_input("X Max", value=defaults['xlim'][1])
         ylim_max = st.number_input("Y Max", value=defaults['ylim'][1])
-        xtick_max = st.number_input("X tick Min", value=defaults['xticks_popt'][1])        
+        xtick_max = st.number_input("X tick Max", value=defaults['xticks_popt'][1])        
     # Combine all parameters
     plot_params_new = {
         'title': title,
@@ -121,7 +121,7 @@ def plot_curves(params, plot_params):
           yticks=plot_params['yticks'],
           title=plot_params['title'])
     g.legend(markerscale=2)
-    return fig, g
+    return fig
 
 
 def display_derived_parameters(params):
