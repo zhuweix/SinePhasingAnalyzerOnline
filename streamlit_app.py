@@ -1,4 +1,5 @@
 import io
+import json
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -32,12 +33,14 @@ def plot_settings_sidebar():
         pos_min = st.number_input("Pos Min", value=defaults['location_range'][0])
         xlim_min = st.number_input("X Min", value=defaults['xlim'][0])
         ylim_min = st.number_input("Y Min", value=defaults['ylim'][0])
+        xtick_min = st.number_input("Xtick Min", value=defaults['xticks_popt'][0])
+        xtick_space = st.number_input("Xtick Spacing", value=defaults['xticks_popt'][2])
     
     with col2:
         pos_max = st.number_input("Pos Min", value=defaults['location_range'][1])
         xlim_max = st.number_input("X Max", value=defaults['xlim'][1])
         ylim_max = st.number_input("Y Max", value=defaults['ylim'][1])
-   
+        xtick_max = st.number_input("Xtick Min", value=defaults['xticks_popt'][1])        
     # Combine all parameters
     plot_params = {
         'title': title,
@@ -46,7 +49,7 @@ def plot_settings_sidebar():
         'xlim': [xlim_min, xlim_max],
         'ylim': [ylim_min, ylim_max],
         'location_range': [pos_min, pos_max],
-        'xticks': np.arange(xlim_min, xlim_max + 1, (xlim_max - xlim_min) / 5),
+        'xticks': np.arange(xtick_min, xtick_max+1, xtick_space),
         'yticks': np.arange(ylim_min, ylim_max + 1, (ylim_max - ylim_min) / 5)
     }
     

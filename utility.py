@@ -163,7 +163,8 @@ def get_plot_defaults():
         'ylabel': 'Relative Methylation Rate',
         'location_range': [-50, 1000],
         'xlim': [-50, 1000],
-        'ylim': [0, 2],  
+        'ylim': [0, 2],
+        'xticks_popt': [0, 1000, 200],
         'xticks': np.arange(0, 1001, 200),
-        'yticks': np.arange(-2, 2.1, 0.5)
+        'yticks': np.arange(-2, 2.1, 0.5),
     }
