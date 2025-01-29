@@ -13,30 +13,86 @@ st.set_page_config(
 def create_parameter_controls(result_dict=None):
     """Create sliders for parameter adjustment"""
     if result_dict is None:
-        # Default values if no result_dict provided
-        return {
-            'A': st.slider('Amplitude', 0.0, 2.0, 1.0, 0.1),
-            'decay': st.slider('Decay (per kb)', 0.001, 0.02, 0.01, 0.001),
-            'space': st.slider('Spacing (bp)', 100, 200, 140, ),
-            'theta_0': st.slider('Phase (θ₀)', -np.pi, np.pi, -np.pi/2, 0.1),
-            'b': st.slider('b0 ', -1.0, 1.0, 0.0, 0.1),
-            's': st.slider('Slope (per kb)', -0.05, 0.05, 0.0, 0.01)
+        spacing = st.number_input('Spacing', value=160)
+        w = 2 * np.pi / spacing
+        amp =  st.number_input('Amplitude', value=0.5)
+        decay = st.number_input('Decay (per period)', value=0.8)
+        slope = st.number_input('Slope', value=0.2)        
+        b = st.number_input('b0', value=1)
+        theta0 = st.number_input('theta0', value=-1.57)
+        params = {
+            'A': amp,
+            'l': -np.log(d) / spacing,
+            'w_0': w,
+            'theta_0': theta0,
+            'b': b,
+            's': slope
         }
+        return params
     else:
-        # Use values from result_dict as defaults
-        popt = result_dict['fit_params']
-        return {
-            'A': st.slider('Amplitude (A)', 0.0, 2.0, float(popt[0]), 0.1),
-            'l': st.slider('Decay Length (l)', 0.001, 0.02, float(popt[1]), 0.001),
-            'w_0': st.slider('Angular Frequency (w_0)', 0.01, 0.1, float(popt[2]), 0.001),
-            'theta_0': st.slider('Phase (θ₀)', -np.pi, np.pi, float(popt[3]), 0.1),
-            'b': st.slider('Baseline (b)', -1.0, 1.0, float(popt[4]), 0.1),
-            's': st.slider('Slope (s)', -0.001, 0.001, float(popt[5]), 0.0001)
+        spacing = st.number_input('Spacing', value=result_dict['Spacing'])
+        w = 2 * np.pi / spacing
+        amp =  st.number_input('Amplitude', value=result_dict['Amplitude'])
+        decay = st.number_input('Decay (per period)', value=result_dict['Decay'])
+        slope = st.number_input('Slope', value=result_dict['Slope'])        
+        b = st.number_input('b0', value=result_dict['b0'])
+        theta0 = st.number_input('theta0', value=result_dict['theta_0'])
+
+        params = {
+            'A': amp,
+            'l': -np.log(decay) / spacing,
+            'w_0': w,
+            'theta_0': theta0,
+            'b': b,
+            's': slope
         }
+        return params
+
+def plot_settings_sidebar():
+    """
+    Create sidebar for plot settings
+    """
+    st.sidebar.header("Plot Settings")
+    
+    # Get default values
+    defaults = get_plot_defaults()
+    
+    # Title and labels
+    title = st.sidebar.text_input("Plot Title", value=defaults['title'])
+    xlabel = st.sidebar.text_input("X-axis Label", value=defaults['xlabel'])
+    ylabel = st.sidebar.text_input("Y-axis Label", value=defaults['ylabel'])
+    
+    # Axis limits
+    st.sidebar.subheader("Axis Limits")
+    col1, col2 = st.sidebar.columns(2)
+        
+    with col1:
+        xlim_min = st.number_input("X Min", value=defaults['xlim'][0])
+        ylim_min = st.number_input("Y Min", value=defaults['ylim'][0])
+        xtick_min = st.number_input("X tick Min", value=defaults['xticks_popt'][0])
+        xtick_space = st.number_input("X tick Spacing", value=defaults['xticks_popt'][2])
+    
+    with col2:
+        xlim_max = st.number_input("X Max", value=defaults['xlim'][1])
+        ylim_max = st.number_input("Y Max", value=defaults['ylim'][1])
+        xtick_max = st.number_input("X tick Min", value=defaults['xticks_popt'][1])        
+    # Combine all parameters
+    plot_params_new = {
+        'title': title,
+        'xlabel': xlabel,
+        'ylabel': ylabel,
+        'xlim': [xlim_min, xlim_max],
+        'ylim': [ylim_min, ylim_max],
+        'xticks': np.arange(xtick_min, xtick_max+1, xtick_space),
+        'yticks': np.arange(ylim_min, ylim_max + 1, (ylim_max - ylim_min) / 5)
+    }
+    
+    return plot_params_new
+
 
 def plot_curves(params, plot_params):
     """Create plot with current parameters"""
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(5, 4))
     
     # Generate x values
     x = np.linspace(plot_params['xlim'][0], plot_params['xlim'][1], 1000)
@@ -46,22 +102,27 @@ def plot_curves(params, plot_params):
                         params['theta_0'], params['b'], params['s'])
     y_high = upper_function(x, params['A'], params['l'], params['b'], params['s'])
     y_low = lower_function(x, params['A'], params['l'], params['b'], params['s'])
-    
+    x_low, x_high = plot_params['xlim']
+    bleft = x_low * params['s'] + params['b']
+    bright = x_high * params['s'] + params['b']  
+
     # Plot curves
-    plt.plot(x, y_fit, 'r-', label='Fitted Curve', lw=2)
-    plt.plot(x, y_high, '--', color='0.7', label='Envelope')
-    plt.plot(x, y_low, '--', color='0.7')
+    g = sns.lineplot(x=x, y=y_fit, label='Fitted', ax=g, color='red', lw=1, ax=ax)    
+    g = sns.lineplot(x=(x_low, x_high), y=(bleft, bright), lw=2, ls='--', color='.3', ax=g)
+    g = sns.lineplot(x=x, y=y_high, lw=2, ls='--', color='0.5', ax=g,)
+    g = sns.lineplot(x=x, y=y_low, lw=2, ls='--', color='0.5', ax=g,)
     
     # Set plot parameters
-    plt.xlabel(plot_params['xlabel'])
-    plt.ylabel(plot_params['ylabel'])
-    plt.title('Interactive Curve Visualization')
-    plt.xlim(plot_params['xlim'])
-    plt.ylim(plot_params['ylim'])
-    plt.grid(True, alpha=0.3)
-    plt.legend()
-    
-    return fig
+    g.set(xlabel=plot_params['xlabel'],
+          ylabel=plot_params['ylabel'],
+          xlim=plot_params['xlim'],
+          ylim=plot_params['ylim'],
+          xticks=plot_params['xticks'],
+          yticks=plot_params['yticks'],
+          title=plot_params['title'])
+    g.legend(markerscale=2)
+    return fig, g
+
 
 def display_derived_parameters(params):
     """Display derived parameters"""

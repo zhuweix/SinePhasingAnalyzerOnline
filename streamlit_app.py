@@ -72,7 +72,7 @@ with col1:
         <p>Upload and analyze your phasing data:</p>
         <ul>
             <li>Upload CSV data files</li>
-            <li>Fit sine waves with exponential decay</li>
+            <li>Fit the data with decaying sine wave model</li>
             <li>Visualize results with interactive plots</li>
             <li>Download processed data and figures</li>
         </ul>
