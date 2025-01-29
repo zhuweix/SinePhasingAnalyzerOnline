@@ -122,10 +122,9 @@ def main():
 
     if uploaded_file is not None and phasing_results is not None:
         df = pd.read_csv(uploaded_file)
-        fit_params = phasing_results['results']['fit_params']
         xmin, xmax = plot_params['location_range']
         gene_df = process_gene_data(
-            df, fit_params, xmin=xmin, xmax=xmax)
+            df, phasing_results, xmin=xmin, xmax=xmax)
         # Show data preview
         st.subheader("Result Preview")
         st.dataframe(gene_df.head(), use_container_width=True)        
