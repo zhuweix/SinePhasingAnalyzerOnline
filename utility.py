@@ -118,7 +118,10 @@ def calculate_adj_gene_level(y, xpos, fit_params):
         return fit_function(x, *popt)
     y_fit = fit_f(xpos)
     adj_rate = np.nanmean(y - y_fit)
-    return adj_rate
+    sst = np.sum((y - np.mean(y))**2)
+    ssr = np.sum((y-y_fit-adj_rate)**2)
+    r2 = 1 - ssr/sst
+    return adj_rate, r2
 
 
 def process_data(df: pd.DataFrame, xmin: int=-50, xmax: int=1000):
@@ -201,9 +204,9 @@ def process_gene_data(df: pd.DataFrame, fit_results: dict,
         for gene, tmp_pd in df.groupby(by='Gene', sort=False):
             y = tmp_pd['Value'].values
             xpos = tmp_pd['Pos'].values
-            adj_rate = calculate_adj_gene_level(y, xpos, fit_params)
-            gene_pd.append((gene, adj_rate))
-        gene_pd = pd.DataFrame(gene_pd, columns=['Gene', 'Adj.Average'])
+            adj_rate, r2 = calculate_adj_gene_level(y, xpos, fit_params)
+            gene_pd.append((gene, adj_rate, r2))
+        gene_pd = pd.DataFrame(gene_pd, columns=['Gene', 'Adj.Average', 'R2'])
 
         return gene_pd
     

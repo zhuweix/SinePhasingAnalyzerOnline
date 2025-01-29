@@ -6,6 +6,8 @@ st.set_page_config(
     layout="wide"
 )
 
+
+
 # Custom CSS that adapts to theme
 st.markdown("""
     <style>
@@ -50,9 +52,17 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+if 'phasing_results' not in st.session_state:
+    st.session_state['phasing_results'] = None
+    
+if 'phasing_df' not in st.session_state:
+    st.session_state['phasing_df'] = None
+
+if 'gene_df' not in st.session_state:
+    st.session_state['gene_df'] = None
 
 # Header
-st.markdown('<p class="big-font">Welcome to Phasing Analysis App 👋</p>', unsafe_allow_html=True)
+st.markdown('<p class="big-font">Welcome to Phasing Analysis App </p>', unsafe_allow_html=True)
 
 # Introduction
 st.markdown("""
@@ -95,7 +105,7 @@ with col2:
     </div>
     """, unsafe_allow_html=True)
     if st.button("Go to Playground ➡️"):
-        st.switch_page("pages/02_curve_playground.py")
+        st.switch_page("pages/02_playground.py")
 
 with col3:
     st.markdown("""
@@ -112,10 +122,13 @@ st.markdown("""
 <div class="card">
     <h3>🚀 Quick Start Guide</h3>
     <ol>
-        <li><b>Data Analysis:</b> Start by uploading your CSV file in the Analysis page</li>
-        <li><b>Review Results:</b> Examine the fitted curves and parameter values</li>
+        <li><b>Phasing Analysis:</b> Start by uploading your CSV file in the Analysis page</li>
+        <li><b>Review Phasing Results:</b> Examine the fitted curves and parameter values</li>
+        <li><b>Export Results:</b> Download your processed data and visualizations</li>        
         <li><b>Explore Parameters:</b> Use the Curve Playground to understand parameter effects</li>
-        <li><b>Export Results:</b> Download your processed data and visualizations</li>
+        <li><b>Gene Analysis:</b> Upload the CSV file for individual gene phasing data</li>
+        <li><b>Review Phasing Results:</b> Examine the phasing data of one particular gene relative to population average</li>
+        <li><b>Export Results:</b> Download your adjusted gene average table</li>             
     </ol>
 </div>
 """, unsafe_allow_html=True)
