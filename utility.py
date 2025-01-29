@@ -203,7 +203,7 @@ def process_gene_data(df: pd.DataFrame, fit_results: dict,
             xpos = tmp_pd['Pos'].values
             adj_rate = calculate_adj_gene_level(y, xpos, fit_params)
             gene_pd.append((gene, adj_rate))
-        gene_pd = pd.DataFrame(gene_pd, columns=[['Gene', 'Adj.Average']])
+        gene_pd = pd.DataFrame(gene_pd, columns=['Gene', 'Adj.Average'])
 
         return gene_pd
     
