@@ -10,9 +10,9 @@ st.set_page_config(
     layout="wide"
 )
 
-def create_parameter_controls(result_dict=None):
+def create_parameter_controls(phasing_results=None):
     """Create sliders for parameter adjustment"""
-    if result_dict is None:
+    if phasing_results is None:
         spacing = st.number_input('Spacing', value=160)
         w = 2 * np.pi / spacing
         amp =  st.number_input('Amplitude', value=0.5)
@@ -29,24 +29,25 @@ def create_parameter_controls(result_dict=None):
             's': slope
         }
         return params
-    else:
-        spacing = st.number_input('Spacing', value=result_dict['Spacing'])
-        w = 2 * np.pi / spacing
-        amp =  st.number_input('Amplitude', value=result_dict['Amplitude'])
-        decay = st.number_input('Decay (per period)', value=result_dict['Decay'])
-        slope = st.number_input('Slope (per kb)', value=result_dict['Slope'])/ 1000     
-        b = st.number_input('b0', value=result_dict['b0'])
-        theta0 = st.number_input('theta0', value=result_dict['theta0'])
 
-        params = {
-            'A': amp,
-            'l': -np.log(decay) / spacing,
-            'w_0': w,
-            'theta_0': theta0,
-            'b': b,
-            's': slope
-        }
-        return params
+    result_dict = phasing_results['results']
+    spacing = st.number_input('Spacing', value=result_dict['Spacing'])
+    w = 2 * np.pi / spacing
+    amp =  st.number_input('Amplitude', value=result_dict['Amplitude'])
+    decay = st.number_input('Decay (per period)', value=result_dict['Decay'])
+    slope = st.number_input('Slope (per kb)', value=result_dict['Slope'])/ 1000     
+    b = st.number_input('b0', value=result_dict['b0'])
+    theta0 = st.number_input('theta0', value=result_dict['theta0'])
+
+    params = {
+        'A': amp,
+        'l': -np.log(decay) / spacing,
+        'w_0': w,
+        'theta_0': theta0,
+        'b': b,
+        's': slope
+    }
+    return params
 
 def plot_settings_sidebar():
     """
@@ -123,45 +124,15 @@ def plot_curves(params, plot_params):
     g.legend(markerscale=2)
     return fig
 
-
-def display_derived_parameters(params):
-    """Display derived parameters"""
-    # Calculate useful derived parameters
-    spacing = 2*np.pi / params['w_0']
-    decay_per_period = np.exp(-params['l'] * spacing)
-    
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("Nucleosome Spacing (bp)", f"{spacing:.1f}")
-    with col2:
-        st.metric("Decay per Period", f"{decay_per_period:.3f}")
-    with col3:
-        st.metric("Oscillation Frequency (bp⁻¹)", f"{params['w_0']/(2*np.pi):.4f}")
-
 def main():
     st.title("Curve Playground")
     st.markdown("""
     Adjust the parameters to see how they affect the fitted curve and envelopes.
     Use this playground to understand the relationship between parameters and the resulting curve shape.
     """)
-    
-    # Get plot defaults
-    plot_params = get_plot_defaults()
-    
     # Create sidebar for plot range controls
     with st.sidebar:
-        st.header("Plot Range")
-        col1, col2 = st.columns(2)
-        with col1:
-            x_min = st.number_input("X Min", value=plot_params['xlim'][0])
-            y_min = st.number_input("Y Min", value=plot_params['ylim'][0])
-        with col2:
-            x_max = st.number_input("X Max", value=plot_params['xlim'][1])
-            y_max = st.number_input("Y Max", value=plot_params['ylim'][1])
-        
-        plot_params['xlim'] = [x_min, x_max]
-        plot_params['ylim'] = [y_min, y_max]
-    
+        plot_params = plot_settings_sidebar()
     # Create two columns for parameters and plot
     col1, col2 = st.columns([1, 2])
     
@@ -170,7 +141,7 @@ def main():
         st.subheader("Parameters")
         # Check if there's a result_dict in session state
         params = create_parameter_controls(
-            st.session_state.get('result_dict', None)
+            st.session_state.get('phasing_results', None)
         )
     
     # Plot in right column
@@ -178,9 +149,6 @@ def main():
         fig = plot_curves(params, plot_params)
         st.pyplot(fig)
     
-    # Display derived parameters
-    st.subheader("Derived Parameters")
-    display_derived_parameters(params)
 
 if __name__ == "__main__":
     main()

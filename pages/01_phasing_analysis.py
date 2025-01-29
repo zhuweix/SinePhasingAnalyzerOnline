@@ -194,6 +194,11 @@ def main():
         
         if processed_result is not None:
             processed_df, result_dict = processed_result
+            # Save to session state with a specific key
+            st.session_state['phasing_results'] = {
+                'results': result_dict,
+                'filename': uploaded_file.name
+            }
             
             # Show data preview
             st.subheader("Data Preview")
