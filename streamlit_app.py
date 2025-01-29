@@ -1,3 +1,4 @@
+import io
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -8,13 +9,6 @@ from utility import (
     process_data, get_plot_defaults
 )
 
-
-# Set page config
-st.set_page_config(
-    page_title="Methylation Analysis",
-    page_icon="📊",
-    layout="wide"
-)
 
 def plot_settings_sidebar():
     """
@@ -33,15 +27,17 @@ def plot_settings_sidebar():
     # Axis limits
     st.sidebar.subheader("Axis Limits")
     col1, col2 = st.sidebar.columns(2)
-    
+        
     with col1:
+        pos_min = st.number_input("Pos Min", value=defaults['location_range'][0])
         xlim_min = st.number_input("X Min", value=defaults['xlim'][0])
         ylim_min = st.number_input("Y Min", value=defaults['ylim'][0])
     
     with col2:
+        pos_max = st.number_input("Pos Min", value=defaults['location_range'][1])
         xlim_max = st.number_input("X Max", value=defaults['xlim'][1])
         ylim_max = st.number_input("Y Max", value=defaults['ylim'][1])
-    
+   
     # Combine all parameters
     plot_params = {
         'title': title,
@@ -49,6 +45,7 @@ def plot_settings_sidebar():
         'ylabel': ylabel,
         'xlim': [xlim_min, xlim_max],
         'ylim': [ylim_min, ylim_max],
+        'location_range': [pos_min, pos_max],
         'xticks': np.arange(xlim_min, xlim_max + 1, (xlim_max - xlim_min) / 5),
         'yticks': np.arange(ylim_min, ylim_max + 1, (ylim_max - ylim_min) / 5)
     }
@@ -109,7 +106,17 @@ def save_figure_to_bytes(fig, format='png', dpi=300):
     buf.seek(0)
     return buf
 
-
+def prepare_results_for_json(result_dict):
+    """Convert numpy values to Python native types for JSON serialization"""
+    json_safe_dict = {}
+    for key, value in result_dict.items():
+        if isinstance(value, np.ndarray):
+            json_safe_dict[key] = value.tolist()
+        elif isinstance(value, np.float64):
+            json_safe_dict[key] = float(value)
+        else:
+            json_safe_dict[key] = value
+    return json_safe_dict
 
 def prepare_results_for_csv(result_dict):
     """Convert results dictionary to 2-column format for CSV"""
@@ -179,7 +186,7 @@ def main():
         df = pd.read_csv(uploaded_file)
         
         # Process data with specified range
-        xmin, xmax = plot_params['analysis_range']
+        xmin, xmax = plot_params['location_range']
         processed_result = process_data(df, xmin=xmin, xmax=xmax)
         
         if processed_result is not None:

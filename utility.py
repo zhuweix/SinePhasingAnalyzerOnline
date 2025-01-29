@@ -161,6 +161,7 @@ def get_plot_defaults():
         'title': 'Phasing Analysis',
         'xlabel': 'Relative to +1 Nucleosome (bp)',
         'ylabel': 'Relative Methylation Rate',
+        'location_range': [-50, 1000],
         'xlim': [-50, 1000],
         'ylim': [0, 2],  
         'xticks': np.arange(0, 1001, 200),
