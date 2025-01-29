@@ -109,10 +109,10 @@ def plot_curves(params, plot_params):
 
     # Plot curves
     g = sns.lineplot(x=x, y=y_fit, label='Fitted', color='red', lw=1, ax=ax)    
-    g = sns.lineplot(x=(x_low, x_high), y=(bleft, bright), lw=2, ls='--', color='.3', ax=g)
-    g = sns.lineplot(x=x, y=y_high, lw=2, ls='--', color='0.5', ax=g,)
+    g = sns.lineplot(x=(x_low, x_high), y=(bleft, bright), lw=2, ls='--', color='.3', ax=g, label='BaseLine')
+    g = sns.lineplot(x=x, y=y_high, lw=2, ls='--', color='0.5', ax=g, label='Envelope')
     g = sns.lineplot(x=x, y=y_low, lw=2, ls='--', color='0.5', ax=g,)
-    
+    g.legend(markerscale=2)
     # Set plot parameters
     g.set(xlabel=plot_params['xlabel'],
           ylabel=plot_params['ylabel'],
@@ -121,7 +121,7 @@ def plot_curves(params, plot_params):
           xticks=plot_params['xticks'],
           yticks=plot_params['yticks'],
           title=plot_params['title'])
-    g.legend(markerscale=2)
+
     return fig
 
 def main():

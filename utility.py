@@ -111,6 +111,16 @@ def calc_sine_fit(y, xpos):
         st.error(f"Fitting failed: {str(e)}")
         return None
 
+
+def calculate_adj_gene_level(y, xpos, fit_params):
+    popt = fit_params
+    def fit_f(x):
+        return fit_function(x, *popt)
+    y_fit = fit_f(xpos)
+    adj_rate = np.nanmean(y - y_fit)
+    return adj_rate
+
+
 def process_data(df: pd.DataFrame, xmin: int=-50, xmax: int=1000):
     """
     Process the DataFrame for phasing analysis
@@ -153,6 +163,55 @@ def process_data(df: pd.DataFrame, xmin: int=-50, xmax: int=1000):
         st.error(f"Data processing failed: {str(e)}")
         return None, None
 
+
+def process_gene_data(df: pd.DataFrame, result_dict: dict, 
+        xmin: int=-50, xmax: int=1000):
+    """
+    Process the DataFrame for phasing analysis
+    
+    Parameters:
+    -----------
+    df : pandas.DataFrame
+        Input dataframe containing methylation data
+        Must have columns: 'Gene', 'Pos', 'Value'
+    result_dict:
+        Fitting result from phasing analysis
+    xmin : int
+        Minimum x value to include in analysis
+    xmax : int
+        Maximum x value to include in analysis
+        
+    Returns:
+    --------
+    tuple
+        (processed_dataframe, result_dictionary)
+    """
+    fit_params = result_dict['fit_params']
+    # Ensure required columns exist
+    required_columns = ['Gene', 'Pos', 'Value']
+    if not all(col in df.columns for col in required_columns):
+        st.error("CSV must contain columns: 'Gene', 'Pos', 'Value'")
+        return None
+    
+    try:
+        # Process data
+        df['Pos'] = df['Pos'].values.astype(int)
+        df = df.loc[(df['Pos'] >= xmin) & (df['Pos'] <= xmax)]
+        gene_pd = []
+        for gene, tmp_pd in df.groupby(by='Gene', sort=False):
+            y = tmp_pd['Value'].values
+            xpos = tmp_pd['Pos'].values
+            adj_rate = calculate_adj_gene_level(y, xpos, fit_params)
+            gene_pd.append((gene, adj_rate))
+        gene_pd = pd.DataFrame(gene_pd, columns=[['Gene', 'Adj.Average']])
+
+        return gene_pd
+    
+    except Exception as e:
+        st.error(f"Data processing failed: {str(e)}")
+        return None
+
+
 def get_plot_defaults():
     """
     Return default plot parameters
@@ -168,3 +227,5 @@ def get_plot_defaults():
         'xticks': np.arange(0, 1001, 200),
         'yticks': np.arange(-2, 2.1, 0.5),
     }
+
+
