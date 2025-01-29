@@ -17,7 +17,7 @@ def create_parameter_controls(result_dict=None):
         w = 2 * np.pi / spacing
         amp =  st.number_input('Amplitude', value=0.5)
         decay = st.number_input('Decay (per period)', value=0.8)
-        slope = st.number_input('Slope', value=0.2)        
+        slope = st.number_input('Slope (per kb)', value=0.2)/ 1000  
         b = st.number_input('b0', value=1)
         theta0 = st.number_input('theta0', value=-1.57)
         params = {
@@ -34,7 +34,7 @@ def create_parameter_controls(result_dict=None):
         w = 2 * np.pi / spacing
         amp =  st.number_input('Amplitude', value=result_dict['Amplitude'])
         decay = st.number_input('Decay (per period)', value=result_dict['Decay'])
-        slope = st.number_input('Slope', value=result_dict['Slope'])        
+        slope = st.number_input('Slope (per kb)', value=result_dict['Slope'])/ 1000     
         b = st.number_input('b0', value=result_dict['b0'])
         theta0 = st.number_input('theta0', value=result_dict['theta0'])
 
