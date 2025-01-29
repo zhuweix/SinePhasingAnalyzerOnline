@@ -78,8 +78,8 @@ with col3:
         <p>Calculate the adjustedd average value for individual genes</p>
     </div>
     """, unsafe_allow_html=True)
-    if st.button("Go to Playground ➡️"):
-        st.switch_page("pages/02_individual_gene.py")
+    if st.button("Go to Individual Gene Analysis ➡️"):
+        st.switch_page("pages/03_individual_gene.py")
 
 # Quick Start Guide
 st.markdown("""
