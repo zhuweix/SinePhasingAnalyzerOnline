@@ -6,24 +6,50 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom CSS for styling
+# Custom CSS that adapts to theme
 st.markdown("""
     <style>
+    /* Using CSS variables for theme-aware styling */
     .big-font {
-        font-size:30px !important;
+        font-size: 30px !important;
         font-weight: bold;
+        color: var(--text-color);
     }
     .medium-font {
-        font-size:20px !important;
+        font-size: 20px !important;
+        color: var(--text-color);
     }
     .card {
         padding: 20px;
         border-radius: 10px;
-        background-color: #f0f2f6;
+        background-color: var(--background-color);
+        border: 1px solid var(--border-color);
         margin: 10px 0px;
+    }
+    
+    /* Theme-aware variables */
+    [data-testid="stAppViewContainer"] {
+        --text-color: inherit;
+        --background-color: rgba(128, 128, 128, 0.1);
+        --border-color: rgba(128, 128, 128, 0.2);
+    }
+
+    /* Ensure text remains visible in both themes */
+    .card h3 {
+        color: inherit;
+    }
+    .card p, .card ul, .card ol {
+        color: inherit;
+    }
+
+    /* Style adjustments for buttons */
+    .stButton button {
+        width: 100%;
+        margin-top: 10px;
     }
     </style>
 """, unsafe_allow_html=True)
+
 
 # Header
 st.markdown('<p class="big-font">Welcome to Phasing Analysis App 👋</p>', unsafe_allow_html=True)
