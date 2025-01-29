@@ -36,7 +36,7 @@ def create_parameter_controls(result_dict=None):
         decay = st.number_input('Decay (per period)', value=result_dict['Decay'])
         slope = st.number_input('Slope', value=result_dict['Slope'])        
         b = st.number_input('b0', value=result_dict['b0'])
-        theta0 = st.number_input('theta0', value=result_dict['theta_0'])
+        theta0 = st.number_input('theta0', value=result_dict['theta0'])
 
         params = {
             'A': amp,
