@@ -139,7 +139,7 @@ def main():
                 file_name='gene_adjusted_average.csv',
                 mime='text/csv'
             )     
-
+        st.sidebar.header("Figure of Individual Gene")
         target_gene = st.sidebar.text_input("Gene Name", value="")
         target_gene = target_gene.strip()
         if len(target_gene) > 0:
