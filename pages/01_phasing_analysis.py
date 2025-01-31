@@ -50,7 +50,7 @@ def plot_settings_sidebar():
         'ylim': [ylim_min, ylim_max],
         'location_range': [pos_min, pos_max],
         'xticks': np.arange(xtick_min, xtick_max+1, xtick_space),
-        'yticks': np.arange(ylim_min, ylim_max + 1, (ylim_max - ylim_min) / 5)
+        'yticks': np.arange(ylim_min, ylim_max*1.05, (ylim_max - ylim_min) / 5)
     }
     
     return plot_params

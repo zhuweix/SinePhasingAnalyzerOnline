@@ -85,7 +85,7 @@ def plot_settings_sidebar():
         'xlim': [xlim_min, xlim_max],
         'ylim': [ylim_min, ylim_max],
         'xticks': np.arange(xtick_min, xtick_max+1, xtick_space),
-        'yticks': np.arange(ylim_min, ylim_max + 1, (ylim_max - ylim_min) / 5)
+        'yticks': np.arange(ylim_min, ylim_max*1.01, (ylim_max - ylim_min) / 5)
     }
     
     return plot_params_new
