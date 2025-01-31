@@ -2,6 +2,7 @@
 
 Run the Sine Phasing Analysis online.
 
+This app is available at [https://sinewaveanalyzer.streamlit.app/](https://sinewaveanalyzer.streamlit.app/).
 
 ### How to run it on your own machine
 

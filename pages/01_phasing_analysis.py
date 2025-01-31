@@ -170,6 +170,15 @@ def display_fit_results(result_dict):
         st.metric("Phase (rad)", 
                  f"{result_dict['theta0']:.2f}")    
 
+def load_example_data():
+    """Load example phasing data from file"""
+    try:
+        return pd.read_csv('data/example_phasing.csv')
+    except Exception as e:
+        st.error(f"Error loading example data: {str(e)}")
+        return None
+        
+
 def main():
     st.title("Phasing Analysis")
     st.markdown("Upload CSV file containing phasing data for analysis.")
@@ -177,17 +186,27 @@ def main():
     # Get plot settings from sidebar
     plot_params = plot_settings_sidebar()
     
-    # Main content
-    uploaded_file = st.file_uploader(
-        "Choose a CSV file (required columns: Pos, Value)",
-        type="csv",
-        help="CSV should contain columns: Pos, Value"
-    )
+    # Add example data option
+    use_example = st.checkbox("Use example data", value=False)
     
-    if uploaded_file is not None:
-        # Load and process data
-        df = pd.read_csv(uploaded_file)
+    if use_example:
+        df = load_example_data()
+        if df is not None:
+            st.success("Using example data from data/example_phasing.csv")
+    else:
+        # File uploader
+        uploaded_file = st.file_uploader(
+            "Choose a CSV file (required columns: Pos, Value)",
+            type="csv",
+            help="CSV should contain columns: Pos, Value"
+        )
         
+        if uploaded_file is None:
+            st.info("Please upload a CSV file or use the example data.")
+            return
+        df = pd.read_csv(uploaded_file)
+    
+    if df is not None:      
         # Process data with specified range
         xmin, xmax = plot_params['location_range']
         processed_result = process_data(df, xmin=xmin, xmax=xmax)
