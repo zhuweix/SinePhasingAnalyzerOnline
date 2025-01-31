@@ -149,7 +149,6 @@ def main():
         st.dataframe(gene_df.head(), use_container_width=True)        
         st.session_state['gene_results'] = {
             'result_df': gene_df,
-            'filename': uploaded_file.name
         }
         gene_dict = dict(zip(gene_df['Gene'], gene_df['Adj.Average']))
         st.download_button(
