@@ -216,7 +216,6 @@ def main():
             # Save to session state with a specific key
             st.session_state['phasing_results'] = {
                 'results': result_dict,
-                'filename': uploaded_file.name
             }
             
             # Show data preview
