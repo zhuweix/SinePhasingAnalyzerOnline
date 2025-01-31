@@ -100,6 +100,13 @@ def save_figure_to_bytes(fig, format='png', dpi=300):
     buf.seek(0)
     return buf
 
+def load_example_data():
+    """Load example phasing data from file"""
+    try:
+        return pd.read_csv('data/example_individual_gene.csv')
+    except Exception as e:
+        st.error(f"Error loading example data: {str(e)}")
+        return None
 
 def main():
     st.title("Analyze Adjusted Average Value for Individual Genes")
@@ -113,15 +120,27 @@ def main():
         plot_params = plot_settings_sidebar()
     
     phasing_results = st.session_state.get('phasing_results', None)
-    # Main content
-    uploaded_file = st.file_uploader(
-        "Choose a CSV file (required columns: Gene, Pos, Value)",
-        type="csv",
-        help="CSV should contain columns: Gene, Pos, Value"
-    )
-
-    if uploaded_file is not None and phasing_results is not None:
+    # Add example data option
+    use_example = st.checkbox("Use example data", value=False)
+    
+    if use_example:
+        df = load_example_data()
+        if df is not None:
+            st.success("Using example data from data/example_individual_gene.csv")
+    else:
+        # File uploader
+        uploaded_file = st.file_uploader(
+            "Choose a CSV file (required columns: Pos, Value)",
+            type="csv",
+            help="CSV should contain columns: Pos, Value"
+        )
+        
+        if uploaded_file is None:
+            st.info("Please upload a CSV file or use the example data.")
+            return
         df = pd.read_csv(uploaded_file)
+    
+    if df is not None:      
         xmin, xmax = plot_params['location_range']
         gene_df = process_gene_data(
             df, phasing_results, xmin=xmin, xmax=xmax)
