@@ -179,7 +179,7 @@ def main():
     
     # Main content
     uploaded_file = st.file_uploader(
-        "Choose a CSV file",
+        "Choose a CSV file (required columns: Pos, Value)",
         type="csv",
         help="CSV should contain columns: Pos, Value"
     )

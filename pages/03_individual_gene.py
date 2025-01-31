@@ -115,7 +115,7 @@ def main():
     phasing_results = st.session_state.get('phasing_results', None)
     # Main content
     uploaded_file = st.file_uploader(
-        "Choose a CSV file (or csv.gz file)",
+        "Choose a CSV file (required columns: Gene, Pos, Value)",
         type="csv",
         help="CSV should contain columns: Gene, Pos, Value"
     )
