@@ -1,6 +1,6 @@
 # Sine Phasing Analyzer Online
 
-Run the Sine Phasing Analysis online.
+Run the Sine Phasing Analysis online. This application visualizes the decaying sine wave analysis in the [SinePhasingAnalyzer](https://github.com/zhuweix/SinePhasingAnalyzer).
 
 This app is available at [https://sinewaveanalyzer.streamlit.app/](https://sinewaveanalyzer.streamlit.app/).
 
